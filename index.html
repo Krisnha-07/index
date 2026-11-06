@@ -1,0 +1,688 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Bhukkad Club</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Mono:wght@500&family=Figtree:wght@400;600;800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* Layout concept: sticker-sheet street-food menu. Thick-bordered cards with hard offset shadows, a loud ticker, one scroll from menu to booking to payment. */
+:root{
+  --bg:#EFE9FF; --surface:#FFFFFF; --ink:#16112B; --muted:#5B5478;
+  --line:#16112B; --shadow:#16112B;
+  --pink:#FF3E8A; --lime:#C6F432; --yellow:#FFD83D; --blue:#6F94FF;
+  --on-bright:#16112B; --veg:#1E9E4A; --nonveg:#D93636; --danger:#C21F4B;
+  --font-display:"Bricolage Grotesque","Arial Black",system-ui,sans-serif;
+  --font-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --bw:2.5px; --r:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14102A; --surface:#211B3D; --ink:#F4F0FF; --muted:#A9A0CC;
+    --line:#F4F0FF; --shadow:#000000; --danger:#FF7A9C; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14102A; --surface:#211B3D; --ink:#F4F0FF; --muted:#A9A0CC;
+  --line:#F4F0FF; --shadow:#000000; --danger:#FF7A9C; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+h1,h2,h3,h4{font-family:var(--font-display);margin:0;text-wrap:balance;line-height:1.05}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--font-mono);font-weight:500}
+
+/* buttons + stickers */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--pink);color:var(--on-bright);border:var(--bw) solid var(--line);border-radius:999px;padding:10px 18px;font-weight:800;box-shadow:4px 4px 0 var(--shadow);transition:transform .12s,box-shadow .12s;text-decoration:none;min-height:44px}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--shadow)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--shadow)}
+.btn.lime{background:var(--lime)}
+.btn.ghost{background:var(--surface);color:var(--ink)}
+.btn.big{padding:14px 24px;font-size:1.05rem;width:100%}
+.btn.add{padding:6px 14px;min-height:38px;box-shadow:3px 3px 0 var(--shadow);background:var(--lime)}
+.sticker{display:inline-block;background:var(--yellow);color:var(--on-bright);border:var(--bw) solid var(--line);border-radius:999px;padding:3px 12px;font-weight:800;font-size:.85rem;transform:rotate(-3deg)}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:31;background:var(--bg);border-bottom:var(--bw) solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
+.logo{font-family:var(--font-display);font-weight:800;font-size:1.35rem;display:flex;align-items:center;gap:8px;letter-spacing:-.02em}
+.logo i{width:26px;height:26px;background:var(--pink);border:var(--bw) solid var(--line);border-radius:8px;transform:rotate(8deg);display:block}
+.nav{display:flex;gap:8px;align-items:center}
+.nav a.lnk{display:none;font-weight:800;text-decoration:none;color:var(--ink);padding:6px 10px}
+.count{background:var(--on-bright);color:#fff;border-radius:999px;min-width:22px;height:22px;display:inline-grid;place-items:center;font-size:.8rem;padding:0 6px}
+@media(min-width:720px){.nav a.lnk{display:block}}
+
+/* hero */
+.hero{padding-block:36px 28px;display:grid;gap:28px;grid-template-columns:1fr;align-items:center}
+@media(min-width:860px){.hero{grid-template-columns:1.5fr 1fr}}
+.hero h1{font-size:clamp(2.6rem,9vw,5.4rem);font-weight:800;letter-spacing:-.035em;line-height:.96}
+.hl{display:inline-block;padding:0 .14em;border:var(--bw) solid var(--line);border-radius:12px;color:var(--on-bright);transform:rotate(-2deg)}
+.hl.pink{background:var(--pink)} .hl.lime{background:var(--lime);transform:rotate(2deg)}
+.hero .sub{margin-top:18px;max-width:46ch;font-size:1.1rem;color:var(--muted)}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pill{border:var(--bw) solid var(--line);border-radius:999px;padding:4px 12px;font-weight:600;font-size:.9rem;background:var(--surface)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.ticket{background:var(--surface);border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:8px 8px 0 var(--shadow);padding:20px;display:grid;gap:14px;transform:rotate(1.5deg)}
+.ticket .t-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:2px dashed var(--line);padding-bottom:12px}
+.ticket .t-row:last-child{border:0;padding:0}
+.ticket .t-k{color:var(--muted);font-weight:600}
+.ticket .t-v{font-family:var(--font-display);font-weight:800;font-size:1.6rem}
+
+/* ticker */
+.ticker{background:var(--lime);color:var(--on-bright);border-block:var(--bw) solid var(--line);overflow:hidden;white-space:nowrap}
+.ticker div{display:inline-block;padding:10px 0;font-family:var(--font-display);font-weight:800;letter-spacing:.04em;text-transform:uppercase;animation:slide 28s linear infinite}
+@keyframes slide{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.ticker div{animation:none}.btn{transition:none}}
+
+/* menu */
+.section{padding-block:44px}
+.sec-head{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:end;margin-bottom:18px}
+.sec-head h2{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.03em}
+.sec-head p{color:var(--muted);margin-top:6px}
+.tools{display:grid;gap:12px;margin-bottom:22px}
+.search{width:100%;background:var(--surface);border:var(--bw) solid var(--line);border-radius:999px;padding:11px 18px;min-height:46px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--surface);border:var(--bw) solid var(--line);border-radius:999px;padding:6px 14px;font-weight:800;font-size:.92rem;min-height:38px;display:inline-flex;align-items:center;gap:8px}
+.chip[aria-pressed="true"]{background:var(--on-bright);color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{background:var(--lime);color:var(--on-bright)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{background:var(--lime);color:var(--on-bright)}}
+.vd{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-radius:3px;position:relative;flex:none}
+.vd::after{content:"";position:absolute;inset:2px;border-radius:50%;background:currentColor}
+.vd.veg{color:var(--veg)} .vd.nv{color:var(--nonveg)}
+.chip .vd{background:#fff}
+.cat-title{font-size:1.5rem;font-weight:800;margin:30px 0 14px;display:flex;align-items:center;gap:10px}
+.cat-title::after{content:"";flex:1;border-top:var(--bw) dashed var(--line);opacity:.5}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.item{background:var(--surface);border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:5px 5px 0 var(--shadow);overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.thumb{height:104px;display:grid;place-items:center;border-bottom:var(--bw) solid var(--line);position:relative;color:var(--on-bright)}
+.emo{font-size:3rem;line-height:1}
+.tag{position:absolute;top:10px;left:10px;background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:1px 9px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.info{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1;min-width:0}
+.nm{display:flex;align-items:center;gap:8px}
+.nm h4{font-size:1.15rem;font-weight:800}
+.info p{color:var(--muted);font-size:.92rem;flex:1}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:4px}
+.price{font-family:var(--font-display);font-size:1.4rem;font-weight:800}
+.step{display:inline-flex;align-items:center;border:var(--bw) solid var(--line);border-radius:999px;background:var(--lime);color:var(--on-bright);overflow:hidden}
+.step button{background:transparent;border:0;width:38px;height:36px;font-size:1.25rem;font-weight:800;color:var(--on-bright)}
+.step button:hover{background:rgba(0,0,0,.12)}
+.step span{min-width:26px;text-align:center;font-weight:800}
+.empty{border:var(--bw) dashed var(--line);border-radius:var(--r);padding:28px;text-align:center;color:var(--muted)}
+
+/* booking */
+.book{background:var(--yellow);color:var(--on-bright);border-block:var(--bw) solid var(--line)}
+.book .sec-head p{color:#3b3320}
+.book-grid{display:grid;gap:22px;grid-template-columns:1fr}
+@media(min-width:900px){.book-grid{grid-template-columns:1.2fr 1fr}}
+.panel{background:var(--surface);color:var(--ink);border:var(--bw) solid var(--line);border-radius:var(--r);box-shadow:6px 6px 0 var(--shadow);padding:20px;min-width:0}
+.panel h3{font-size:1.4rem;font-weight:800;margin-bottom:14px}
+.fields{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.fields .full{grid-column:1/-1}
+@media(max-width:520px){.fields{grid-template-columns:1fr}}
+label.f{display:grid;gap:6px;font-weight:800;font-size:.9rem;min-width:0}
+.inp{width:100%;background:var(--bg);border:var(--bw) solid var(--line);border-radius:12px;padding:10px 12px;min-height:44px}
+textarea.inp{min-height:70px;resize:vertical}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{border:var(--bw) solid var(--line);border-radius:14px;padding:12px;background:var(--bg);text-align:left;display:grid;gap:2px}
+.mode b{font-family:var(--font-display);font-size:1.1rem}
+.mode span{font-size:.85rem;color:var(--muted)}
+.mode[aria-pressed="true"]{background:var(--pink);color:var(--on-bright)}
+.mode[aria-pressed="true"] span{color:var(--on-bright)}
+.err{color:var(--danger);font-weight:800;min-height:1.4em;margin-top:12px}
+.lines{display:grid;gap:10px;margin:0 0 14px;padding:0;list-style:none}
+.lines li{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center}
+.lines .ln-n{font-weight:600;min-width:0;overflow-wrap:anywhere}
+.lines .ln-p{font-weight:800;min-width:64px;text-align:right}
+.lines .step{background:var(--bg);color:var(--ink)}
+.lines .step button{color:var(--ink);height:32px;width:32px}
+.totals{border-top:2px dashed var(--line);padding-top:12px;display:grid;gap:6px}
+.totals div{display:flex;justify-content:space-between;gap:10px}
+.totals .grand{font-family:var(--font-display);font-size:1.6rem;font-weight:800;margin-top:4px}
+.num{font-variant-numeric:tabular-nums}
+
+/* pay + done views */
+.page{padding-block:28px 60px}
+.back{background:none;border:0;font-weight:800;padding:8px 0;margin-bottom:10px;text-decoration:underline;text-underline-offset:4px}
+.page h2{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:20px}
+.pay-grid{display:grid;gap:22px;grid-template-columns:1fr}
+@media(min-width:900px){.pay-grid{grid-template-columns:1.25fr 1fr}}
+.methods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:480px){.methods{grid-template-columns:1fr}}
+.method{border:var(--bw) solid var(--line);border-radius:14px;padding:10px 12px;background:var(--bg);font-weight:800;text-align:left;min-height:48px}
+.method[aria-pressed="true"]{background:var(--lime);color:var(--on-bright)}
+.qrbox{background:#fff;border:var(--bw) solid var(--line);border-radius:14px;padding:12px;display:inline-grid;place-items:center;min-width:100px;min-height:100px}
+.qrbox img,.qrbox canvas{display:block;max-width:100%;height:auto}
+.upi-wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+.upi-side{display:grid;gap:10px;flex:1;min-width:200px}
+.copyrow{display:flex;gap:8px}
+.copyrow .inp{font-family:var(--font-mono)}
+.note{font-size:.85rem;color:var(--muted)}
+.demo{display:inline-block;border:2px dashed var(--line);border-radius:10px;padding:6px 10px;font-size:.82rem;margin-top:14px;color:var(--muted)}
+.kv{display:grid;gap:6px;margin-bottom:14px}
+.kv div{display:flex;justify-content:space-between;gap:12px}
+.kv span:first-child{color:var(--muted)}
+.kv span:last-child{font-weight:800;text-align:right;overflow-wrap:anywhere}
+.ok-card{max-width:560px;margin:0 auto}
+.stamp{display:inline-block;background:var(--lime);color:var(--on-bright);border:var(--bw) solid var(--line);border-radius:12px;padding:4px 14px;font-family:var(--font-display);font-weight:800;font-size:1.1rem;transform:rotate(-3deg);margin-bottom:12px}
+.token{font-family:var(--font-display);font-weight:800;font-size:3.2rem;letter-spacing:-.03em;line-height:1}
+
+/* misc */
+.bar-cart{position:fixed;left:0;right:0;bottom:0;z-index:25;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));pointer-events:none}
+.bar-cart .btn{pointer-events:auto;max-width:520px;margin:0 auto;display:flex;width:100%;justify-content:space-between;background:var(--lime)}
+footer{padding-block:34px 110px;color:var(--muted)}
+footer .logo{color:var(--ink);margin-bottom:6px}
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(10,6,30,.65);display:grid;place-items:center;padding:16px}
+.dialog{background:var(--surface);color:var(--ink);border:var(--bw) solid var(--line);border-radius:20px;box-shadow:8px 8px 0 var(--shadow);padding:22px;max-width:420px;width:100%;max-height:100%;overflow:auto;text-align:center;display:grid;gap:14px;justify-items:center}
+.dialog h3{font-size:1.7rem;font-weight:800}
+.dialog .copyrow{width:100%}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--on-bright);color:#fff;border-radius:999px;padding:8px 18px;font-weight:800;z-index:60}
+</style>
+
+<div id="view-home">
+  <header class="top">
+    <div class="wrap bar">
+      <a class="logo" href="#top" style="text-decoration:none;color:inherit"><i></i>ShortxMedia</a>
+      <nav class="nav">
+        <a class="lnk" href="#menu">Menu</a>
+        <a class="lnk" href="#book">Pre-book</a>
+        <button class="btn ghost" data-act="open-qr" type="button">QR</button>
+        <button class="btn" data-act="goto-book" type="button">Cart <span class="count num" id="hCount">0</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="wrap hero">
+      <div>
+        <span class="sticker">Naya order system</span>
+        <h1 style="margin-top:14px">Bhook lagi hai?<br><span class="hl pink">Pre-book</span> kar,<br>line <span class="hl lime">skip</span> kar.</h1>
+        <p class="sub">Menu dekho, slot pakdo, UPI se pay karo. Aap pahunchoge toh khaana ready milega.</p>
+        <div class="pills">
+          <span class="pill">Open 12 PM to 11 PM</span>
+          <span class="pill">Veg + Non-veg</span>
+          <span class="pill">Pickup in ~20 min</span>
+        </div>
+        <div class="cta">
+          <a class="btn big" href="#menu" style="width:auto">Menu dekho</a>
+          <button class="btn ghost big" data-act="open-qr" type="button" style="width:auto">Table QR</button>
+        </div>
+      </div>
+      <aside class="ticket" aria-label="Aaj ki details">
+        <div class="t-row"><span class="t-k">Menu starts at</span><span class="t-v num" id="minPrice">₹29</span></div>
+        <div class="t-row"><span class="t-k">Slots left aaj</span><span class="t-v num" id="slotsLeft">0</span></div>
+        <div class="t-row"><span class="t-k">Items on menu</span><span class="t-v num" id="itemCount">0</span></div>
+      </aside>
+    </section>
+
+    <div class="ticker" aria-hidden="true"><div id="tickerTxt"></div></div>
+
+    <section class="section wrap" id="menu">
+      <div class="sec-head">
+        <div>
+          <h2>Aaj ka menu</h2>
+          <p>Sab prices ₹ mein, GST bill pe alag se.</p>
+        </div>
+      </div>
+      <div class="tools">
+        <input class="search" id="search" type="search" placeholder="Kuch dhundho: momos, chai, biryani..." aria-label="Menu search">
+        <div class="chips" id="chips"></div>
+      </div>
+      <div id="menuOut"></div>
+    </section>
+
+    <section class="book" id="book">
+      <div class="section wrap">
+        <div class="sec-head">
+          <div>
+            <h2>Seat ya parcel pakka karo</h2>
+            <p>Slot choose karo, details bharo, phir pay karo.</p>
+          </div>
+        </div>
+        <div class="book-grid">
+          <form class="panel" id="bookForm" novalidate>
+            <h3>Pre-book details</h3>
+            <div class="fields">
+              <div class="full">
+                <div class="modes" role="group" aria-label="Order type">
+                  <button class="mode" type="button" data-act="set-mode" data-mode="dine" aria-pressed="true"><b>Dine-in</b><span>Table ready milegi</span></button>
+                  <button class="mode" type="button" data-act="set-mode" data-mode="take" aria-pressed="false"><b>Takeaway</b><span>Packed aur ready</span></button>
+                </div>
+              </div>
+              <label class="f" for="day">Din<select class="inp" id="day"></select></label>
+              <label class="f" for="slot">Time slot<select class="inp" id="slot"></select></label>
+              <label class="f full" for="guests" id="guestsWrap">Kitne log
+                <select class="inp" id="guests"></select>
+              </label>
+              <label class="f" for="cname">Naam<input class="inp" id="cname" type="text" autocomplete="name" placeholder="Aapka naam"></label>
+              <label class="f" for="cphone">Phone<input class="inp" id="cphone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="10 digit number"></label>
+              <label class="f full" for="cnote">Note (optional)<textarea class="inp" id="cnote" placeholder="Kam teekha, extra chutney, birthday setup..."></textarea></label>
+            </div>
+            <p class="err" id="formErr" role="alert"></p>
+          </form>
+          <div class="panel">
+            <h3>Aapka order</h3>
+            <div id="cartBox"></div>
+            <button class="btn big" type="button" data-act="go-pay" style="margin-top:16px">Pay karo</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <div class="logo"><i></i>ShortxMedia</div>
+    <p>Dil se desi, vibe se Gen Z. Share karne ke liye QR button dabao.</p>
+  </footer>
+</div>
+
+<div id="view-pay" hidden>
+  <div class="wrap page">
+    <button class="back" type="button" data-act="back-home">← Menu pe wapas</button>
+    <h2>Payment time</h2>
+    <div class="pay-grid">
+      <div class="panel">
+        <h3>Kaise pay karoge?</h3>
+        <div class="methods" role="group" aria-label="Payment method">
+          <button class="method" type="button" data-act="set-method" data-m="upi" aria-pressed="true">UPI / QR</button>
+          <button class="method" type="button" data-act="set-method" data-m="card" aria-pressed="false">Card</button>
+          <button class="method" type="button" data-act="set-method" data-m="cash" aria-pressed="false">Counter pe</button>
+        </div>
+
+        <div id="p-upi">
+          <div class="upi-wrap">
+            <div class="qrbox" id="upiQr"></div>
+            <div class="upi-side">
+              <p><b>Kisi bhi UPI app se scan karo</b> aur amount check karke pay karo.</p>
+              <div class="copyrow">
+                <input class="inp" id="upiId" readonly aria-label="UPI ID">
+                <button class="btn ghost" type="button" data-act="copy-upi">Copy</button>
+              </div>
+              <a class="btn ghost" id="upiLink" href="#">UPI app kholo</a>
+              <p class="note">Link na khule toh QR scan karo ya UPI ID copy karo.</p>
+            </div>
+          </div>
+          <button class="btn big" type="button" data-act="pay-done" data-m="upi" style="margin-top:18px">Pay kar diya, confirm karo</button>
+        </div>
+
+        <div id="p-card" hidden>
+          <div class="fields">
+            <label class="f full" for="cardNo">Card number<input class="inp" id="cardNo" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="19"></label>
+            <label class="f full" for="cardName">Naam on card<input class="inp" id="cardName" autocomplete="cc-name" placeholder="Name"></label>
+            <label class="f" for="cardExp">Expiry<input class="inp" id="cardExp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5"></label>
+            <label class="f" for="cardCvv">CVV<input class="inp" id="cardCvv" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="3" type="password"></label>
+          </div>
+          <p class="err" id="cardErr" role="alert"></p>
+          <button class="btn big" type="button" data-act="pay-done" data-m="card">Pay <span class="num" id="cardAmt"></span></button>
+        </div>
+
+        <div id="p-cash" hidden>
+          <p>Order abhi confirm ho jayega. Restaurant pahunch ke counter pe cash ya UPI se pay karo.</p>
+          <button class="btn big" type="button" data-act="pay-done" data-m="cash" style="margin-top:18px">Order confirm karo</button>
+        </div>
+        <span class="demo">Demo mode: asli payment verify karne ke liye Razorpay ya PhonePe jaisa gateway jodna hoga.</span>
+      </div>
+
+      <div class="panel">
+        <h3>Bill</h3>
+        <div class="kv" id="payKv"></div>
+        <ul class="lines" id="payLines"></ul>
+        <div class="totals num" id="payTotals"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="view-done" hidden>
+  <div class="wrap page">
+    <div class="panel ok-card">
+      <span class="stamp" id="doneStamp">Booking pakki!</span>
+      <p class="note">Aapka token</p>
+      <div class="token" id="doneToken"></div>
+      <p id="doneMsg" style="margin:12px 0 16px"></p>
+      <div class="kv" id="doneKv"></div>
+      <ul class="lines" id="doneLines"></ul>
+      <div class="totals num" id="doneTotals"></div>
+      <button class="btn big" type="button" data-act="new-order" style="margin-top:18px">Naya order</button>
+    </div>
+  </div>
+</div>
+
+<div class="bar-cart" id="cartBar" hidden>
+  <button class="btn" type="button" data-act="goto-book"><span><span class="num" id="barCount">0</span> items</span><span class="num" id="barTotal"></span><span>Pre-book →</span></button>
+</div>
+
+<div class="overlay" id="qrModal" hidden role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+  <div class="dialog">
+    <h3 id="qrTitle">Scan karo, menu kholo</h3>
+    <div class="qrbox" id="siteQr"></div>
+    <p class="note">Is QR ko table tent ya poster pe laga do. Koi bhi scan karke menu dekh aur order kar sakta hai.</p>
+    <div class="copyrow">
+      <input class="inp" id="siteUrl" aria-label="Website link">
+      <button class="btn ghost" type="button" data-act="copy-link">Copy</button>
+    </div>
+    <p class="note">Apni live website ka link upar daalo, QR apne aap badal jayega.</p>
+    <button class="btn" type="button" data-act="close-qr">Band karo</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+(function(){
+  var CONFIG={name:'ShortxMedia',upi:'shortxmedia@upi',gst:0.05,open:12,close:23,leadMin:30};
+  var CATS=[
+    {id:'chaat',label:'Chaat & Snacks',c:'--yellow'},
+    {id:'wraps',label:'Burgers & Wraps',c:'--pink'},
+    {id:'momos',label:'Momos',c:'--lime'},
+    {id:'pizza',label:'Pizza & Pasta',c:'--blue'},
+    {id:'mains',label:'Mains',c:'--yellow'},
+    {id:'drinks',label:'Drinks',c:'--lime'},
+    {id:'sweet',label:'Meetha',c:'--pink'}
+  ];
+  var RAW=[
+    ['chaat','Samosa Chaat','Crispy samosa, chole, dahi, imli chutney',79,1,'Bestseller','🥟'],
+    ['chaat','Dahi Papdi','Papdi, dahi, sev, meethi chutney',89,1,'','🧆'],
+    ['chaat','Peri Peri Fries','Garam fries, peri peri masala',99,1,'Spicy','🍟'],
+    ['chaat','Chicken Popcorn','Crunchy bites, mint mayo dip',149,0,'','🍗'],
+    ['wraps','Aloo Tikki Burger','Desi tikki, cheese slice, mint mayo',99,1,'Bestseller','🍔'],
+    ['wraps','Paneer Tikka Wrap','Smoky paneer, onion, green chutney',129,1,'','🌯'],
+    ['wraps','Crispy Chicken Burger','Fried chicken, slaw, spicy sauce',159,0,'','🍔'],
+    ['wraps','Egg Roll','Double egg, onion, chilli sauce',89,0,'','🌯'],
+    ['momos','Veg Steam Momos','6 pcs, red chilli chutney',89,1,'','🥟'],
+    ['momos','Kurkure Momos','6 pcs, crispy outside, soft inside',119,1,'New','🥟'],
+    ['momos','Chicken Tandoori Momos','6 pcs, tandoori masala, mayo',149,0,'Spicy','🥟'],
+    ['pizza','Margherita Pizza','Cheese, tomato, basil, 8 inch',149,1,'','🍕'],
+    ['pizza','Peri Peri Paneer Pizza','Paneer, capsicum, peri peri',219,1,'Spicy','🍕'],
+    ['pizza','White Sauce Pasta','Creamy penne, herbs, garlic bread',169,1,'','🍝'],
+    ['mains','Dal Makhani Bowl','Slow cooked dal, jeera rice',159,1,'','🍲'],
+    ['mains','Paneer Butter Masala + Rice','Rich gravy, steamed rice',189,1,'','🍛'],
+    ['mains','Butter Chicken Bowl','Makhani gravy, rice, butter naan',219,0,'Bestseller','🍛'],
+    ['mains','Veg Biryani','Dum biryani, raita',169,1,'','🍚'],
+    ['mains','Chicken Biryani','Dum biryani, raita, salan',229,0,'','🍚'],
+    ['drinks','Masala Chai','Adrak, elaichi, full tapri vibe',29,1,'Bestseller','☕'],
+    ['drinks','Fresh Lime Soda','Sweet, salted ya mixed',59,1,'','🍋'],
+    ['drinks','Mango Lassi','Thick, cold, malai wali',79,1,'','🥭'],
+    ['drinks','Cold Coffee','Creamy, ice cream on top',99,1,'','🧋'],
+    ['drinks','Oreo Shake','Thick shake, cookie crumble',129,1,'New','🥤'],
+    ['sweet','Gulab Jamun (2 pcs)','Garam, chashni mein dooba',59,1,'','🍮'],
+    ['sweet','Kulfi Falooda','Malai kulfi, falooda, rose syrup',99,1,'','🍨'],
+    ['sweet','Brownie + Ice Cream','Warm brownie, vanilla scoop',129,1,'','🍫']
+  ];
+  var MENU=RAW.map(function(r,i){return {id:'i'+i,cat:r[0],name:r[1],desc:r[2],price:r[3],veg:!!r[4],tag:r[5],emoji:r[6]};});
+
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var fmt=function(n){return '₹'+Number(n).toLocaleString('en-IN')};
+  var state={cart:{},cat:'all',veg:false,q:'',mode:'dine',method:'upi',booking:null,orderId:''};
+
+  function byId(id){return MENU.filter(function(m){return m.id===id})[0]}
+  function totals(){
+    var sub=0,count=0;
+    Object.keys(state.cart).forEach(function(id){var q=state.cart[id];if(q>0){sub+=byId(id).price*q;count+=q}});
+    var gst=Math.round(sub*CONFIG.gst);
+    return {sub:sub,gst:gst,total:sub+gst,count:count};
+  }
+  function toast(msg){
+    var t=$('#toast');t.textContent=msg;t.hidden=false;
+    clearTimeout(toast._t);toast._t=setTimeout(function(){t.hidden=true},1800);
+  }
+  function copy(text,input){
+    function fallback(){ if(input){input.focus();input.select();} toast('Select ho gaya, ab copy kar lo'); }
+    try{ navigator.clipboard.writeText(text).then(function(){toast('Copy ho gaya')}).catch(fallback); }
+    catch(e){ fallback(); }
+  }
+
+  /* ---------- menu ---------- */
+  function ctl(id){
+    var q=state.cart[id]||0;
+    if(!q) return '<button class="btn add" type="button" data-act="add" data-id="'+id+'">+ Add</button>';
+    return '<div class="step"><button type="button" data-act="dec" data-id="'+id+'" aria-label="Kam karo">−</button><span class="num">'+q+'</span><button type="button" data-act="inc" data-id="'+id+'" aria-label="Badhao">+</button></div>';
+  }
+  function card(it){
+    var cat=CATS.filter(function(c){return c.id===it.cat})[0];
+    return '<article class="item"><div class="thumb" style="background:var('+cat.c+')"><span class="emo" aria-hidden="true">'+it.emoji+'</span>'+(it.tag?'<span class="tag">'+it.tag+'</span>':'')+'</div>'+
+      '<div class="info"><div class="nm"><i class="vd '+(it.veg?'veg':'nv')+'" title="'+(it.veg?'Veg':'Non-veg')+'"></i><h4>'+it.name+'</h4></div><p>'+it.desc+'</p>'+
+      '<div class="row"><b class="price num">'+fmt(it.price)+'</b><div data-ctl="'+it.id+'">'+ctl(it.id)+'</div></div></div></article>';
+  }
+  function renderChips(){
+    var html='<button class="chip" type="button" data-act="cat" data-cat="all" aria-pressed="'+(state.cat==='all')+'">Sab</button>';
+    CATS.forEach(function(c){html+='<button class="chip" type="button" data-act="cat" data-cat="'+c.id+'" aria-pressed="'+(state.cat===c.id)+'">'+c.label+'</button>'});
+    html+='<button class="chip" type="button" data-act="veg" aria-pressed="'+state.veg+'"><i class="vd veg"></i>Veg only</button>';
+    $('#chips').innerHTML=html;
+  }
+  function renderMenu(){
+    var q=state.q.trim().toLowerCase(),out='';
+    CATS.forEach(function(c){
+      if(state.cat!=='all'&&state.cat!==c.id) return;
+      var items=MENU.filter(function(m){
+        return m.cat===c.id&&(!state.veg||m.veg)&&(!q||(m.name+' '+m.desc).toLowerCase().indexOf(q)>-1);
+      });
+      if(!items.length) return;
+      out+='<h3 class="cat-title">'+c.label+'</h3><div class="grid">'+items.map(card).join('')+'</div>';
+    });
+    $('#menuOut').innerHTML=out||'<div class="empty">Kuch nahi mila. Dusra naam try karo ya filter hata do.</div>';
+  }
+
+  /* ---------- cart ---------- */
+  function linesHtml(editable){
+    var ids=Object.keys(state.cart).filter(function(id){return state.cart[id]>0});
+    return ids.map(function(id){
+      var it=byId(id),q=state.cart[id];
+      var mid=editable?'<div class="step"><button type="button" data-act="dec" data-id="'+id+'" aria-label="Kam karo">−</button><span class="num">'+q+'</span><button type="button" data-act="inc" data-id="'+id+'" aria-label="Badhao">+</button></div>':'<span class="num">×'+q+'</span>';
+      return '<li><span class="ln-n">'+it.name+'</span>'+mid+'<span class="ln-p num">'+fmt(it.price*q)+'</span></li>';
+    }).join('');
+  }
+  function totalsHtml(t){
+    return '<div><span>Subtotal</span><span>'+fmt(t.sub)+'</span></div><div><span>GST ('+Math.round(CONFIG.gst*100)+'%)</span><span>'+fmt(t.gst)+'</span></div><div class="grand"><span>Total</span><span>'+fmt(t.total)+'</span></div>';
+  }
+  function refreshCart(){
+    var t=totals();
+    $('#hCount').textContent=t.count;
+    $('#barCount').textContent=t.count;
+    $('#barTotal').textContent=fmt(t.total);
+    $('#cartBar').hidden=!(t.count>0&&!$('#view-home').hidden);
+    var box=$('#cartBox');
+    if(!t.count){
+      box.innerHTML='<div class="empty">Cart khaali hai. <a href="#menu" style="color:inherit;font-weight:800">Menu se kuch add karo</a>.</div>';
+    }else{
+      box.innerHTML='<ul class="lines">'+linesHtml(true)+'</ul><div class="totals num">'+totalsHtml(t)+'</div>';
+    }
+  }
+  function setQty(id,d){
+    var q=Math.max(0,(state.cart[id]||0)+d);
+    if(q) state.cart[id]=q; else delete state.cart[id];
+    $$('[data-ctl="'+id+'"]').forEach(function(el){el.innerHTML=ctl(id)});
+    refreshCart();
+    if(!$('#view-pay').hidden) renderPay();
+  }
+
+  /* ---------- booking form ---------- */
+  function fmtTime(m){var h=Math.floor(m/60),mm=m%60;return (h%12||12)+':'+String(mm).padStart(2,'0')+' '+(h>=12?'PM':'AM')}
+  function slotList(dayIdx){
+    var now=new Date(),earliest=dayIdx===0?now.getHours()*60+now.getMinutes()+CONFIG.leadMin:0,list=[];
+    for(var m=CONFIG.open*60;m<=CONFIG.close*60-30;m+=30){ if(m>=earliest) list.push(m); }
+    return list;
+  }
+  function buildDays(){
+    var sel=$('#day'),now=new Date(),html='';
+    for(var i=0;i<7;i++){
+      var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i);
+      var ds=d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+      var label=i===0?'Aaj · '+ds:i===1?'Kal · '+ds:d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+      html+='<option value="'+i+'">'+label+'</option>';
+    }
+    sel.innerHTML=html;
+  }
+  function buildSlots(){
+    var list=slotList(+$('#day').value),sel=$('#slot');
+    sel.innerHTML=list.length?list.map(function(m){return '<option value="'+m+'">'+fmtTime(m)+'</option>'}).join(''):'<option value="">Aaj ke slots khatam, Kal choose karo</option>';
+  }
+  function buildGuests(){
+    var h='';for(var i=1;i<=12;i++)h+='<option value="'+i+'"'+(i===2?' selected':'')+'>'+i+(i===1?' person':' log')+'</option>';
+    $('#guests').innerHTML=h;
+  }
+  function setMode(m){
+    state.mode=m;
+    $$('[data-act="set-mode"]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.mode===m))});
+    $('#guestsWrap').hidden=m!=='dine';
+  }
+  function validate(){
+    var err=$('#formErr'),t=totals();
+    var name=$('#cname').value.trim(),phone=$('#cphone').value.trim();
+    var msg='';
+    if(!t.count) msg='Pehle menu se kuch add karo.';
+    else if(!$('#slot').value) msg='Time slot choose karo.';
+    else if(name.length<2) msg='Apna naam daalo.';
+    else if(!/^[6-9]\d{9}$/.test(phone)) msg='10 digit ka sahi mobile number daalo.';
+    err.textContent=msg;
+    if(msg){ if(!t.count){$('#menu').scrollIntoView({behavior:'smooth'});} return false; }
+    state.booking={
+      mode:state.mode,day:$('#day').selectedOptions[0].textContent,slot:$('#slot').selectedOptions[0].textContent,
+      guests:$('#guests').value,name:name,phone:phone,note:$('#cnote').value.trim()
+    };
+    return true;
+  }
+
+  /* ---------- QR ---------- */
+  function makeQr(el,text,size,level){
+    el.innerHTML='';
+    if(typeof QRCode==='undefined'){el.textContent='QR load nahi hua. Net check karo.';return}
+    try{
+      new QRCode(el,{text:text,width:size,height:size,colorDark:'#16112B',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel[level||'M']});
+    }catch(e){el.textContent='QR nahi ban paya. Link chhota karo.'}
+  }
+  function pageUrl(){try{return location.href.split('#')[0]}catch(e){return ''}}
+  function openQr(){
+    var input=$('#siteUrl');
+    if(!input.value) input.value=pageUrl();
+    $('#qrModal').hidden=false;
+    makeQr($('#siteQr'),input.value||'https://',200,'M');
+    $('#qrModal .btn:last-child').focus();
+  }
+  function closeQr(){$('#qrModal').hidden=true}
+
+  /* ---------- views ---------- */
+  function showView(v){
+    ['home','pay','done'].forEach(function(n){$('#view-'+n).hidden=(n!==v)});
+    window.scrollTo(0,0);
+    refreshCart();
+  }
+  function renderBookingKv(){
+    var b=state.booking;
+    return '<div><span>Order ID</span><span class="mono">'+state.orderId+'</span></div>'+
+      '<div><span>Type</span><span>'+(b.mode==='dine'?'Dine-in':'Takeaway')+'</span></div>'+
+      '<div><span>Kab</span><span>'+b.day+', '+b.slot+'</span></div>'+
+      (b.mode==='dine'?'<div><span>Log</span><span>'+b.guests+'</span></div>':'')+
+      '<div><span>Naam</span><span class="js-name"></span></div>'+
+      '<div><span>Phone</span><span class="mono">'+b.phone+'</span></div>';
+  }
+  function renderPay(){
+    var t=totals(),b=state.booking;
+    if(!b||!t.count){showView('home');return}
+    $('#payKv').innerHTML=renderBookingKv();
+    $$('#payKv .js-name').forEach(function(e){e.textContent=b.name});
+    $('#payLines').innerHTML=linesHtml(true);
+    $('#payTotals').innerHTML=totalsHtml(t);
+    $('#cardAmt').textContent=fmt(t.total);
+    $('#upiId').value=CONFIG.upi;
+    var link='upi://pay?pa='+encodeURIComponent(CONFIG.upi)+'&pn='+encodeURIComponent(CONFIG.name)+'&am='+t.total+'.00&cu=INR&tn='+encodeURIComponent(state.orderId);
+    $('#upiLink').setAttribute('href',link);
+    makeQr($('#upiQr'),link,180,'L');
+  }
+  function setMethod(m){
+    state.method=m;
+    $$('[data-act="set-method"]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.m===m))});
+    ['upi','card','cash'].forEach(function(n){$('#p-'+n).hidden=(n!==m)});
+  }
+  function goPay(){
+    if(!validate()) return;
+    state.orderId='BC'+String(Math.floor(1000+Math.random()*9000));
+    renderPay();
+    setMethod('upi');
+    showView('pay');
+  }
+  function payDone(m){
+    if(m==='card'){
+      var n=$('#cardNo').value.replace(/\s/g,''),e=$('#cardExp').value,c=$('#cardCvv').value,nm=$('#cardName').value.trim(),err=$('#cardErr'),msg='';
+      if(!/^\d{16}$/.test(n)) msg='16 digit card number daalo.';
+      else if(nm.length<2) msg='Card pe likha naam daalo.';
+      else if(!/^(0[1-9]|1[0-2])\/\d{2}$/.test(e)) msg='Expiry MM/YY format mein daalo.';
+      else if(!/^\d{3}$/.test(c)) msg='3 digit CVV daalo.';
+      err.textContent=msg;
+      if(msg) return;
+    }
+    var t=totals(),b=state.booking;
+    var msgs={
+      upi:'UPI payment note ho gaya. Counter pe token dikhao, hum match kar lenge.',
+      card:'Card payment (demo) successful. Token dikhao aur khaana enjoy karo.',
+      cash:'Order confirm hai. Counter pe pay karna hai.'
+    };
+    $('#doneStamp').textContent=m==='cash'?'Order confirm!':'Booking pakki!';
+    $('#doneToken').textContent='#'+state.orderId;
+    $('#doneMsg').textContent=msgs[m];
+    $('#doneKv').innerHTML=renderBookingKv()+'<div><span>Payment</span><span>'+({upi:'UPI',card:'Card (demo)',cash:'Counter pe'})[m]+'</span></div>';
+    $$('#doneKv .js-name').forEach(function(e){e.textContent=b.name});
+    $('#doneLines').innerHTML=linesHtml(false);
+    $('#doneTotals').innerHTML=totalsHtml(t);
+    showView('done');
+  }
+  function newOrder(){
+    state.cart={};state.booking=null;
+    $('#cardNo').value='';$('#cardExp').value='';$('#cardCvv').value='';$('#cardName').value='';
+    renderMenu();refreshCart();showView('home');
+  }
+
+  /* ---------- events ---------- */
+  document.addEventListener('click',function(ev){
+    var el=ev.target.closest('[data-act]');
+    if(!el) return;
+    var a=el.dataset.act,id=el.dataset.id;
+    if(a==='add'||a==='inc') setQty(id,1);
+    else if(a==='dec') setQty(id,-1);
+    else if(a==='cat'){state.cat=el.dataset.cat;renderChips();renderMenu()}
+    else if(a==='veg'){state.veg=!state.veg;renderChips();renderMenu()}
+    else if(a==='set-mode') setMode(el.dataset.mode);
+    else if(a==='set-method') setMethod(el.dataset.m);
+    else if(a==='goto-book') $('#book').scrollIntoView({behavior:'smooth'});
+    else if(a==='go-pay') goPay();
+    else if(a==='back-home') showView('home');
+    else if(a==='pay-done') payDone(el.dataset.m);
+    else if(a==='open-qr') openQr();
+    else if(a==='close-qr') closeQr();
+    else if(a==='copy-upi') copy(CONFIG.upi,$('#upiId'));
+    else if(a==='copy-link') copy($('#siteUrl').value,$('#siteUrl'));
+    else if(a==='new-order') newOrder();
+  });
+  $('#qrModal').addEventListener('click',function(e){if(e.target===this)closeQr()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('#qrModal').hidden)closeQr()});
+  $('#search').addEventListener('input',function(){state.q=this.value;renderMenu()});
+  $('#day').addEventListener('change',buildSlots);
+  $('#bookForm').addEventListener('submit',function(e){e.preventDefault()});
+  $('#siteUrl').addEventListener('input',function(){makeQr($('#siteQr'),this.value||'https://',200,'M')});
+  $('#cphone').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'')});
+  $('#cardNo').addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'').slice(0,16);this.value=v.replace(/(.{4})/g,'$1 ').trim();
+  });
+  $('#cardExp').addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'').slice(0,4);this.value=v.length>2?v.slice(0,2)+'/'+v.slice(2):v;
+  });
+  $('#cardCvv').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'')});
+
+  /* ---------- init ---------- */
+  var tick='Pre-book karo ✦ Line skip ✦ Chai ₹29 se ✦ UPI accepted ✦ Dine-in + Takeaway ✦ ShortxMedia ✦ ';
+  $('#tickerTxt').textContent=tick+tick+tick+tick;
+  $('#minPrice').textContent=fmt(Math.min.apply(null,MENU.map(function(m){return m.price})));
+  $('#itemCount').textContent=MENU.length;
+  $('#slotsLeft').textContent=slotList(0).length;
+  buildDays();buildSlots();buildGuests();
+  renderChips();renderMenu();refreshCart();
+})();
+</script>
+
+</body></html>
